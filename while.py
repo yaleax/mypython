@@ -7,7 +7,7 @@
 while True:
     total = 0
     count = 0
-    user_input = input("请输入数字我会帮你求和，按Q退出：")
+    user_input = input("请输入数字我会帮你求和，按Q开始计算：")
     while user_input != "Q" and user_input != "q":
         total += float(user_input)
         count += 1
