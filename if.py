@@ -5,3 +5,9 @@ if year >= 2000:
 else:
     print("You are before the 21st century")
 
+
+point = 3
+
+rs2 = "Welcome to the 21st century!" if point == 3 else "You are before the 21st century"
+
+print(rs2)
