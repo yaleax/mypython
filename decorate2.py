@@ -1,5 +1,6 @@
 from openpyxl import Workbook
 from openpyxl import load_workbook
+from openpyxl.styles import PatternFill
 
 wb = load_workbook('test5.xlsx')
 ws = wb.active
@@ -13,5 +14,9 @@ for i,cell in enumerate(ws['A']):
     else:
         index.append(i)
 
-print(index)
-print(tem)
+fill = PatternFill("solid", fgColor="FF0000")
+
+for i,cell in enumerate(ws['A']):
+    if i in index:
+        cell.fill = fill
+wb.save('test5.xlsx')
