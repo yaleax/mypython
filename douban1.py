@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 from openpyxl import Workbook
-
 hearders = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "Accept-Encoding": "gzip, deflate",
@@ -21,63 +20,35 @@ hearders = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
 }
 
-allName = []
-allRate = []
-allDirection = []
-allComment = []
+movieName = []
+movieDirector = []
+movieScore = []
+movieComment = []
 
-for num in range(10):
-    content = requests.get(f"https://movie.douban.com/top250?start={num * 25}&filter=",headers= hearders).text
-    soup = BeautifulSoup(content,"html.parser")
-    allNameList = soup.find_all("span",class_="title")
-    allRateList = soup.find_all("span",attrs= {"class": "rating_num"})
-    allDirectionList = soup.find_all("p",attrs= {"class": ""})
-    allCommentList = soup.find_all("span",attrs= {"class": "inq"})
-    for name in allNameList:
-        if name.text.startswith("\xa0/\xa0"):
+for i in range(10):
+    url = f'https://movie.douban.com/top250?start={i*25}&filter='
+    response = requests.get(url, headers=hearders)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    movieNameList = soup.find_all('span', class_='title')
+    movieDirectorList = soup.find('p', attrs={"class": ""})
+    movieScoreList = soup.find_all('span', class_="rating_num")
+    for name in movieNameList:
+        if name.text.startswith('\xa0/\xa0'):
             pass
         else:
-            allName.append(name.text)
-    for rate in allRateList:
-        allRate.append(rate.text)
-    for direction in allDirectionList:
-        if direction:
-            myDirection = direction.get_text().strip().split(" ")[1]
-            allDirection.append(myDirection)
-    for comment in allCommentList:
-        allComment.append(comment.text)
-#保存到excel
-wb = Workbook()
-sh = wb.active
-try:
-    worksheet = wb.create_sheet("豆瓣电影TOP250")
-except:
-    worksheet = wb["豆瓣电影TOP250"]
-myTitle = ['电影名称', '导演', '评分', '评论']
-sh.append(myTitle)
-print(allName)
-print(allRate)
-print(allDirection)
-print(allComment)
+            movieName.append(name.string)
+    for movie in soup.select('.item'):
+        directorList = movie.find('p', attrs={"class": ""})
+        if directorList:
+            myDirector = directorList.get_text().strip().split(' ')[1]
+            movieDirector.append(myDirector)
+    for score in movieScoreList:
+        movieScore.append(score.text)
+    for movie in soup.select('.item'):
+        if movie.select('.bd .quote') == []:
+            movieComment.append('空')
+        else:
+            comment = movie.select('.bd .quote')[0].text  # 影评
+            movieComment.append(comment.strip())
 
-#把 allName,allRate,allDirection,allComment 里的数据写入到excel
-for i in range(4):
-    if i == 0:
-        for j ,name in enumerate(allName):
-            sh.cell(row=j+2,column=i+1,value=name)
-    if i == 1:
-        for j ,rate in enumerate(allRate):
-            sh.cell(row=j+2,column=i+1,value=rate)
-    if i == 2:
-        for j ,direction in enumerate(allDirection):
-            sh.cell(row=j+2,column=i+1,value=direction)
-    if i == 3:
-        for j ,comment in enumerate(allComment):
-            sh.cell(row=j+2,column=i+1,value=comment)
-
-wb.save("豆瓣电影TOP250.xlsx")
-wb.close()
-
-
-
-
+print(movieName)

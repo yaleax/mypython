@@ -19,7 +19,7 @@ headers = {
     "Connection": "keep-alive",
     "Cookie": 'll="118200"; bid=if7o-u5rpLw; _vwo_uuid_v2=D42BF118CA0CFBF33DE8D94435B90D555|8925bd17a31f8b7058e92337ffcb5018; __gads=ID=4dc7fd39de72a642-22ad1e0315d700a5:T=1666015161:RT=1666015161:S=ALNI_MYaFQPlEV9oanRAwTzfwojslL387A; dbcl2="263719242:cdu+tcWOYSA"; __utmz=30149280.1666020617.4.3.utmcsr=accounts.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/; __utmz=223695111.1666020617.3.2.utmcsr=accounts.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/; push_noty_num=0; push_doumail_num=0; ct=y; __yadk_uid=YjGciSzXayZFWFJ5s9NkPcW5sv8CoJWw; ck=c-17; _pk_ref.100001.4cf6=%5B%22%22%2C%22%22%2C1666700334%2C%22https%3A%2F%2Faccounts.douban.com%2F%22%5D; __utma=30149280.1094459905.1662650904.1666623522.1666700335.9; __utmc=30149280; __utma=223695111.1141913362.1662650905.1666623522.1666700335.8; __utmc=223695111; __gpi=UID=00000b6478645c88:T=1666015161:RT=1666700335:S=ALNI_MarpFDTt2lvlUo2-EkBJy3V-uPMsA; _pk_id.100001.4cf6=6be088305e22e180.1662650904.8.1666700967.1666625362.',
     "Host": "movie.douban.com",
-    "sec-ch-ua": "\"Chromium\";v=\"106\", \"Google Chrome\";v=\"106\", \"Not;A=Brand\";v=\"99\"",
+    "sec-ch-ua": "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"106\", \"Not;A=Brand\";v=\"99\"",
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": "\"Windows\"",
     "Sec-Fetch-Dest": "document",
@@ -36,6 +36,7 @@ scores = []
 comments = []
 for i in range(10):
     url = f'https://movie.douban.com/top250?start={num}&filter='
+    #print(url)
     response = requests.get(url, headers=headers)
     # print(response.text)
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -49,6 +50,7 @@ for i in range(10):
             pass
         else:
             movie_names.append(title.string)
+    #print(soup.select('.item'))
     for movie in soup.select('.item'):
         director_list = movie.find('p', attrs={"class": ""})
         if director_list:
@@ -63,8 +65,9 @@ for i in range(10):
             comment = movie.select('.bd .quote')[0].text  # 影评
             comments.append(comment.strip())
     num += 25
+    #print(num)
 # print(movie_names)
-# print(directors)
+print(directors)
 # print(scores)
 # print(comments)
 try:
