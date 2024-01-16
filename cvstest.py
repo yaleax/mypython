@@ -14,6 +14,15 @@ with open('TOP250.csv', 'r', encoding='utf-8') as f:
 
         counts[favorite]['count'] += 1
         counts[favorite]['movies'].append(movie)
+#     for row in reader:
+#         favorite = row['评分']
+#         if favorite not in counts:
+#             counts[favorite] = 1
+#         else:
+#             counts[favorite] += 1
+# for favorite in counts:
+#     print(favorite, counts[favorite])
+
 
 for favorite, data in counts.items():
     movies_list = ', '.join(data['movies'])
